@@ -81,7 +81,7 @@ extension UIView {
         }
     }
     
-    func edge(to view: UIView, insets: ConstraintEdgeInsets = .zero) {
+    func edges(to view: UIView, insets: ConstraintEdgeInsets = .zero) {
         self.topAnchor =| view.topAnchor + insets.top
         self.leadingAnchor =| view.leadingAnchor + insets.leading
         self.bottomAnchor =| view.bottomAnchor - insets.bottom
@@ -90,7 +90,7 @@ extension UIView {
     
     func edgesToSuperview(insets: ConstraintEdgeInsets = .zero) {
         guard let superview = self.superview else { return }
-        self.edge(to: superview, insets: insets)
+        self.edges(to: superview, insets: insets)
     }
     
     func center(in view: UIView, offset: CGPoint = .zero) {
