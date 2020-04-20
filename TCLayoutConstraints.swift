@@ -106,7 +106,7 @@ extension UIView {
 
 extension NSLayoutConstraint {
     
-    fileprivate func becomeViewsToAutoulyout() {
+    fileprivate func setViewsToAutolayout() {
         
         if let firstView = self.firstItem as? UIView, firstView.layoutType != .autolayout {
             firstView.layoutType = .autolayout
@@ -123,7 +123,7 @@ extension NSLayoutXAxisAnchor {
     @discardableResult
     static func =| (left: NSLayoutXAxisAnchor, right: NSLayoutXAxisAnchor) -> NSLayoutConstraint {
         let constraint = left.constraint(equalTo: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -131,7 +131,7 @@ extension NSLayoutXAxisAnchor {
     @discardableResult
     static func >=| (left: NSLayoutXAxisAnchor, right: NSLayoutXAxisAnchor) -> NSLayoutConstraint {
         let constraint = left.constraint(greaterThanOrEqualTo: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -139,7 +139,7 @@ extension NSLayoutXAxisAnchor {
     @discardableResult
     static func <=| (left: NSLayoutXAxisAnchor, right: NSLayoutXAxisAnchor) -> NSLayoutConstraint {
         let constraint = left.constraint(lessThanOrEqualTo: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -150,7 +150,7 @@ extension NSLayoutYAxisAnchor {
     @discardableResult
     static func =| (left: NSLayoutYAxisAnchor, right: NSLayoutYAxisAnchor) -> NSLayoutConstraint {
         let constraint = left.constraint(equalTo: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -158,7 +158,7 @@ extension NSLayoutYAxisAnchor {
     @discardableResult
     static func >=| (left: NSLayoutYAxisAnchor, right: NSLayoutYAxisAnchor) -> NSLayoutConstraint {
         let constraint = left.constraint(greaterThanOrEqualTo: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -166,7 +166,7 @@ extension NSLayoutYAxisAnchor {
     @discardableResult
     static func <=| (left: NSLayoutYAxisAnchor, right: NSLayoutYAxisAnchor) -> NSLayoutConstraint {
         let constraint = left.constraint(lessThanOrEqualTo: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -182,7 +182,7 @@ extension NSLayoutDimension {
     @discardableResult
     static func =| (left: NSLayoutDimension, right: CGFloat) -> NSLayoutConstraint {
         let constraint = left.constraint(equalToConstant: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -190,7 +190,7 @@ extension NSLayoutDimension {
     @discardableResult
     static func =| (left: NSLayoutDimension, right: NSLayoutDimension) -> NSLayoutConstraint {
         let constraint = left.constraint(equalTo: right, multiplier: 1)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -198,7 +198,7 @@ extension NSLayoutDimension {
     @discardableResult
     static func =| (left: NSLayoutDimension, right: LayoutMultiplierResult) -> NSLayoutConstraint {
         let constraint = left.constraint(equalTo: right.dimension, multiplier: right.multiplier)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -211,7 +211,7 @@ extension NSLayoutDimension {
     @discardableResult
     static func >=| (left: NSLayoutDimension, right: CGFloat) -> NSLayoutConstraint {
         let constraint = left.constraint(greaterThanOrEqualToConstant: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
@@ -219,7 +219,7 @@ extension NSLayoutDimension {
     @discardableResult
     static func <=| (left: NSLayoutDimension, right: CGFloat) -> NSLayoutConstraint {
         let constraint = left.constraint(lessThanOrEqualToConstant: right)
-        constraint.becomeViewsToAutoulyout()
+        constraint.setViewsToAutolayout()
         constraint.isActive = true
         return constraint
     }
