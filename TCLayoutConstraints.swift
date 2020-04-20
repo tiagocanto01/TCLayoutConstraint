@@ -30,7 +30,7 @@ struct ConstraintEdgeInsets {
         ConstraintEdgeInsets(top: value)
     }
     
-    static func left(_ value: CGFloat) -> ConstraintEdgeInsets {
+    static func leading(_ value: CGFloat) -> ConstraintEdgeInsets {
         ConstraintEdgeInsets(leading: value)
     }
     
@@ -38,7 +38,7 @@ struct ConstraintEdgeInsets {
         ConstraintEdgeInsets(bottom: value)
     }
     
-    static func right(_ value: CGFloat) -> ConstraintEdgeInsets {
+    static func trailing(_ value: CGFloat) -> ConstraintEdgeInsets {
         ConstraintEdgeInsets(trailing: value)
     }
     
