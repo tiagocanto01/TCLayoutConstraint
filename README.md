@@ -2,7 +2,7 @@
  Syntactic sugar that makes Auto Layout easier and readable
 
 ## Examples
-Don't need to activate the constraints, and don't need to set translatesAutoresizingMaskIntoConstraints to false
+Don't need to activate the constraints, and don't need to set translatesAutoresizingMaskIntoConstraints to false.
 Each line return a NSLayoutContraint
 
 ### Set Vertical or Horizontal Constraint
