@@ -3,7 +3,7 @@
 
 ## Examples
 Don't need to activate the constraints, and don't need to set translatesAutoresizingMaskIntoConstraints to false.
-Each line return a NSLayoutContraint
+Each line returns a NSLayoutContraint
 
 ### Set Vertical or Horizontal Constraint
 ```swift
