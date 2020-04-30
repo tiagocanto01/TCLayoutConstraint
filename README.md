@@ -11,7 +11,7 @@ Each line return a NSLayoutContraint
     view.leadingAnchor =| superview.leadingAnchor + 15
     view.bottomAnchor =| superview.bottomAnchor
     
-    let constraint = view.trailingAnchor =| superview.trailingAnchor - 15
+    let constraint = (view.trailingAnchor =| superview.trailingAnchor - 15)
     constraint.priority = .defaultLow
 ```
 OR 
