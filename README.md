@@ -13,33 +13,32 @@ Each line returns a NSLayoutContraint
     
     let constraint = (view.trailingAnchor =| superview.trailingAnchor - 15)
     constraint.priority = .defaultLow
-```
-OR 
-
-```swift
-    view.edges(to: superview)
-    label.edges(to: superview, insets: .uniform(15))
-    button.edgesToSuperview()
+    
+    view.edgesAnchor =| superview.edgesAnchor
+    (label.edgesAnchor =| superview.edgesAnchor).withInsets(.uniform(15))
+    let buttonEdgesConstraints = (button.edgesAnchor =| superview.edgesAnchor).withInsets(.top(10) + .horizontal(20))
+    buttonEdgesConstraints.bottomConstraint.priority = .defaultHigh
 ```
 
 ### Set Width or Height
 ```swift
-    view.width =| 100
-    view.height =| 50
+    view.widthAnchor =| 100
+    view.heightAnchor =| 50
     
-    label.width =| label.height * 2
+    label.widthAnchor =| label.heightAnchor * 2
+    
+    view.sizeAnchor =| CGSize(width: 100, height: 50)
+    view.sizeAnchor =| labe.sizeAnchor
 ```
 
 ### Center X and Center Y
 ```swift
-    view.centerX =| superview.centerX
-    view.centerY =| superview.centerY
-```
-OR
-
-```swift
-    view.center(in: superview)
-    label.centerInSuperview()
+    view.centerXAnchor =| superview.centerXAnchor
+    view.centerYAnchor =| superview.centerYAnchor
+    
+    view.centerAnchor =| superview.centerAnchor
+    (label.centerAnchor =| superview.centerAnchor).withOffset(TCOffset(x, 10, y: 50))
+    (button.centerAnchor =| superview.centerAnchor).withOffset(TCOffset(y: 50))
 ```
 
 # Installation
