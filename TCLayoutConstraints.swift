@@ -12,52 +12,6 @@ infix operator =| : AdditionPrecedence
 infix operator >=| : AdditionPrecedence
 infix operator <=| : AdditionPrecedence
 
-
-struct ConstraintEdgeInsets {
-    
-    var top: CGFloat = 0
-    var leading: CGFloat = 0
-    var bottom: CGFloat = 0
-    var trailing: CGFloat = 0
-    
-    static let zero = ConstraintEdgeInsets()
-    
-    static func uniform(_ value: CGFloat) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(top: value, leading: value, bottom: value, trailing: value)
-    }
-    
-    static func top(_ value: CGFloat) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(top: value)
-    }
-    
-    static func leading(_ value: CGFloat) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(leading: value)
-    }
-    
-    static func bottom(_ value: CGFloat) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(bottom: value)
-    }
-    
-    static func trailing(_ value: CGFloat) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(trailing: value)
-    }
-    
-    static func horizontal(_ value: CGFloat) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(leading: value, trailing: value)
-    }
-    
-    static func vertical(_ value: CGFloat) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(top: value, bottom: value)
-    }
-    
-    static func + (lhs: ConstraintEdgeInsets, rhs: ConstraintEdgeInsets) -> ConstraintEdgeInsets {
-        ConstraintEdgeInsets(top:       lhs.top + rhs.top,
-                             leading:   lhs.leading + rhs.leading,
-                             bottom:    lhs.bottom + rhs.bottom,
-                             trailing:  lhs.trailing + rhs.trailing)
-    }
-}
-
 enum LayoutType {
     case frameBased
     case autolayout
@@ -81,26 +35,22 @@ extension UIView {
         }
     }
     
-    func edges(to view: UIView, insets: ConstraintEdgeInsets = .zero) {
-        self.topAnchor =| view.topAnchor + insets.top
-        self.leadingAnchor =| view.leadingAnchor + insets.leading
-        self.bottomAnchor =| view.bottomAnchor - insets.bottom
-        self.trailingAnchor =| view.trailingAnchor - insets.trailing
+    var edgesAnchor: TCLayoutEdgesAnchor {
+        get {
+            TCLayoutEdgesAnchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: self.trailingAnchor)
+        }
     }
     
-    func edgesToSuperview(insets: ConstraintEdgeInsets = .zero) {
-        guard let superview = self.superview else { return }
-        self.edges(to: superview, insets: insets)
+    var centerAnchor: TCLayoutCenterAnchor {
+        get {
+            TCLayoutCenterAnchor(centerX: self.centerXAnchor, centerY: self.centerYAnchor)
+        }
     }
     
-    func center(in view: UIView, offset: CGPoint = .zero) {
-        self.centerXAnchor =| view.centerXAnchor + offset.x
-        self.centerYAnchor =| view.centerYAnchor + offset.y
-    }
-    
-    func centerInSuperview(offset: CGPoint = .zero) {
-        guard let superview = self.superview else { return }
-        self.center(in: superview, offset: offset)
+    var sizeAnchor: TCLayoutSizeAnchor {
+        get {
+            TCLayoutSizeAnchor(width: self.widthAnchor, height: self.heightAnchor)
+        }
     }
 }
 
@@ -231,4 +181,197 @@ func - (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
 func + (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
     right.constant += constant
     return right
+}
+
+// MARK: - Edges
+
+// MARK: TCLayoutEdgesAnchor
+class TCLayoutEdgesAnchor {
+    
+    var topAnchor: NSLayoutYAxisAnchor
+    var leadingAnchor: NSLayoutXAxisAnchor
+    var bottomAnchor: NSLayoutYAxisAnchor
+    var trailingAnchor: NSLayoutXAxisAnchor
+    
+    init(top: NSLayoutYAxisAnchor, leading: NSLayoutXAxisAnchor, bottom: NSLayoutYAxisAnchor, trailing: NSLayoutXAxisAnchor) {
+        self.topAnchor = top
+        self.leadingAnchor = leading
+        self.bottomAnchor = bottom
+        self.trailingAnchor = trailing
+    }
+    
+    @discardableResult
+    static func =| (left: TCLayoutEdgesAnchor, right: TCLayoutEdgesAnchor) -> TCEdgesConstraints {
+        
+        let leadingConstraint = left.leadingAnchor =| right.leadingAnchor
+        let trailingConstraint = left.trailingAnchor =| right.trailingAnchor
+        let topConstraint = left.topAnchor =| right.topAnchor
+        let bottomConstraint = left.bottomAnchor =| right.bottomAnchor
+        
+        return TCEdgesConstraints(top: topConstraint, leading: leadingConstraint, bottom: bottomConstraint, trailing: trailingConstraint)
+    }
+}
+
+// MARK: TCEdgesConstraints
+class TCEdgesConstraints {
+ 
+    private(set) var topConstraint: NSLayoutConstraint
+    private(set) var leadingConstraint: NSLayoutConstraint
+    private(set) var bottomConstraint: NSLayoutConstraint
+    private(set) var trailingConstraint: NSLayoutConstraint
+    
+    init(top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
+        self.topConstraint = top
+        self.leadingConstraint = leading
+        self.bottomConstraint = bottom
+        self.trailingConstraint = trailing
+    }
+    
+    @discardableResult
+    func withInsets(_ insets: TCEdgeInsets) -> TCEdgesConstraints {
+        self.topConstraint.constant += insets.top
+        self.leadingConstraint.constant += insets.leading
+        self.bottomConstraint.constant -= insets.bottom
+        self.trailingConstraint.constant -= insets.trailing
+            
+        return self
+    }
+}
+
+// MARK: TCEdgeInsets
+struct TCEdgeInsets {
+    
+    var top: CGFloat = 0
+    var leading: CGFloat = 0
+    var bottom: CGFloat = 0
+    var trailing: CGFloat = 0
+    
+    static let zero = TCEdgeInsets()
+    
+    static func uniform(_ value: CGFloat) -> TCEdgeInsets {
+        TCEdgeInsets(top: value, leading: value, bottom: value, trailing: value)
+    }
+    
+    static func top(_ value: CGFloat) -> TCEdgeInsets {
+        TCEdgeInsets(top: value)
+    }
+    
+    static func leading(_ value: CGFloat) -> TCEdgeInsets {
+        TCEdgeInsets(leading: value)
+    }
+    
+    static func bottom(_ value: CGFloat) -> TCEdgeInsets {
+        TCEdgeInsets(bottom: value)
+    }
+    
+    static func trailing(_ value: CGFloat) -> TCEdgeInsets {
+        TCEdgeInsets(trailing: value)
+    }
+    
+    static func horizontal(_ value: CGFloat) -> TCEdgeInsets {
+        TCEdgeInsets(leading: value, trailing: value)
+    }
+    
+    static func vertical(_ value: CGFloat) -> TCEdgeInsets {
+        TCEdgeInsets(top: value, bottom: value)
+    }
+    
+    static func + (lhs: TCEdgeInsets, rhs: TCEdgeInsets) -> TCEdgeInsets {
+        TCEdgeInsets(top:       lhs.top + rhs.top,
+                     leading:   lhs.leading + rhs.leading,
+                     bottom:    lhs.bottom + rhs.bottom,
+                     trailing:  lhs.trailing + rhs.trailing)
+    }
+}
+
+// MARK: - Center
+
+// MARK: TCLayoutCenterAnchor
+class TCLayoutCenterAnchor {
+    
+    var centerXAnchor: NSLayoutXAxisAnchor
+    var centerYAnchor: NSLayoutYAxisAnchor
+    
+    init(centerX: NSLayoutXAxisAnchor, centerY: NSLayoutYAxisAnchor) {
+        self.centerXAnchor = centerX
+        self.centerYAnchor = centerY
+    }
+    
+    @discardableResult
+    static func =| (left: TCLayoutCenterAnchor, right: TCLayoutCenterAnchor) -> TCCenterConstraints {
+        let centerXConstraint = left.centerXAnchor =| right.centerXAnchor
+        let centerYConstraint = left.centerYAnchor =| right.centerYAnchor
+        
+        return TCCenterConstraints(centerX: centerXConstraint, centerY: centerYConstraint)
+    }
+}
+
+
+// MARK: TCCenterConstraints
+class TCCenterConstraints {
+ 
+    private(set) var centerXConstraint: NSLayoutConstraint
+    private(set) var centerYConstraint: NSLayoutConstraint
+    
+    init(centerX: NSLayoutConstraint, centerY: NSLayoutConstraint) {
+        self.centerXConstraint = centerX
+        self.centerYConstraint = centerY
+    }
+    
+    @discardableResult
+    func withOffset(_ offset: TCOffset) -> TCCenterConstraints {
+        self.centerXConstraint.constant += offset.x
+        self.centerYConstraint.constant += offset.y
+        
+        return self
+    }
+}
+
+struct TCOffset {
+    var x: CGFloat = 0
+    var y: CGFloat = 0
+}
+
+// MARK: - Size
+
+// MARK: TCLayoutSizeAnchor
+class TCLayoutSizeAnchor {
+    
+    var widthAnchor: NSLayoutDimension
+    var heightAnchor: NSLayoutDimension
+    
+    init(width: NSLayoutDimension, height: NSLayoutDimension) {
+        self.widthAnchor = width
+        self.heightAnchor = height
+    }
+    
+    @discardableResult
+    static func =| (left: TCLayoutSizeAnchor, right: TCLayoutSizeAnchor) -> TCSizeConstraints {
+        let widthConstraint = left.widthAnchor =| right.widthAnchor
+        let heightConstraint = left.heightAnchor =| right.heightAnchor
+        
+        return TCSizeConstraints(width: widthConstraint, height: heightConstraint)
+    }
+}
+
+
+// MARK: TCSizeConstraints
+class TCSizeConstraints {
+ 
+    private(set) var widthConstraint: NSLayoutConstraint
+    private(set) var heightConstraint: NSLayoutConstraint
+    
+    init(width: NSLayoutConstraint, height: NSLayoutConstraint) {
+        self.widthConstraint = width
+        self.heightConstraint = height
+    }
+}
+
+@discardableResult
+func =| (sizeAnchor: TCLayoutSizeAnchor, size: CGSize) -> TCSizeConstraints {
+    
+    let widthConstraint = sizeAnchor.widthAnchor =| size.width
+    let heightConstraint = sizeAnchor.heightAnchor =| size.height
+    
+    return TCSizeConstraints(width: widthConstraint, height: heightConstraint)
 }
