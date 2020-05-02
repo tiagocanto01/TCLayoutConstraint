@@ -57,7 +57,7 @@ extension UIView {
 extension NSLayoutConstraint {
     
     fileprivate func setViewToAutolayout() {
-
+        
         if let firstView = self.firstItem as? UIView, firstView.layoutType != .autolayout {
             firstView.layoutType = .autolayout
         }
@@ -132,7 +132,7 @@ extension NSLayoutDimension {
         constraint.isActive = true
         return constraint
     }
-
+    
     @discardableResult
     static func =| (left: NSLayoutDimension, right: NSLayoutDimension) -> NSLayoutConstraint {
         let constraint = left.constraint(equalTo: right, multiplier: 1)
@@ -214,7 +214,7 @@ class TCLayoutEdgesAnchor {
 
 // MARK: TCEdgesConstraints
 class TCEdgesConstraints {
- 
+    
     private(set) var topConstraint: NSLayoutConstraint
     private(set) var leadingConstraint: NSLayoutConstraint
     private(set) var bottomConstraint: NSLayoutConstraint
@@ -233,7 +233,7 @@ class TCEdgesConstraints {
         self.leadingConstraint.constant += insets.leading
         self.bottomConstraint.constant -= insets.bottom
         self.trailingConstraint.constant -= insets.trailing
-            
+        
         return self
     }
 }
@@ -309,7 +309,7 @@ class TCLayoutCenterAnchor {
 
 // MARK: TCCenterConstraints
 class TCCenterConstraints {
- 
+    
     private(set) var centerXConstraint: NSLayoutConstraint
     private(set) var centerYConstraint: NSLayoutConstraint
     
@@ -357,7 +357,7 @@ class TCLayoutSizeAnchor {
 
 // MARK: TCSizeConstraints
 class TCSizeConstraints {
- 
+    
     private(set) var widthConstraint: NSLayoutConstraint
     private(set) var heightConstraint: NSLayoutConstraint
     
@@ -367,11 +367,46 @@ class TCSizeConstraints {
     }
 }
 
+// MARK: TCSize
+struct TCSize {
+    
+    var width: CGFloat = 0
+    var height: CGFloat = 0
+    
+    init(width: CGFloat, height: CGFloat) {
+        self.width = width
+        self.height = height
+    }
+    
+    init(squareSide: CGFloat) {
+        self.width = squareSide
+        self.height = squareSide
+    }
+}
+
 @discardableResult
-func =| (sizeAnchor: TCLayoutSizeAnchor, size: CGSize) -> TCSizeConstraints {
+func =| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     
     let widthConstraint = sizeAnchor.widthAnchor =| size.width
     let heightConstraint = sizeAnchor.heightAnchor =| size.height
+    
+    return TCSizeConstraints(width: widthConstraint, height: heightConstraint)
+}
+
+@discardableResult
+func >=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
+    
+    let widthConstraint = sizeAnchor.widthAnchor >=| size.width
+    let heightConstraint = sizeAnchor.heightAnchor >=| size.height
+    
+    return TCSizeConstraints(width: widthConstraint, height: heightConstraint)
+}
+
+@discardableResult
+func <=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
+    
+    let widthConstraint = sizeAnchor.widthAnchor <=| size.width
+    let heightConstraint = sizeAnchor.heightAnchor <=| size.height
     
     return TCSizeConstraints(width: widthConstraint, height: heightConstraint)
 }
