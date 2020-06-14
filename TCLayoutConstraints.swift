@@ -1,3 +1,4 @@
+
 //
 //  TCLayoutConstraints.swift
 //  Constraints
@@ -215,10 +216,17 @@ class TCLayoutEdgesAnchor {
 // MARK: TCEdgesConstraints
 class TCEdgesConstraints {
     
-    private(set) var topConstraint: NSLayoutConstraint
-    private(set) var leadingConstraint: NSLayoutConstraint
-    private(set) var bottomConstraint: NSLayoutConstraint
-    private(set) var trailingConstraint: NSLayoutConstraint
+    enum Option {
+        case top
+        case leading
+        case bottom
+        case trailing
+    }
+    
+    private(set) var topConstraint: NSLayoutConstraint?
+    private(set) var leadingConstraint: NSLayoutConstraint?
+    private(set) var bottomConstraint: NSLayoutConstraint?
+    private(set) var trailingConstraint: NSLayoutConstraint?
     
     init(top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
         self.topConstraint = top
@@ -229,10 +237,36 @@ class TCEdgesConstraints {
     
     @discardableResult
     func withInsets(_ insets: TCEdgeInsets) -> TCEdgesConstraints {
-        self.topConstraint.constant += insets.top
-        self.leadingConstraint.constant += insets.leading
-        self.bottomConstraint.constant -= insets.bottom
-        self.trailingConstraint.constant -= insets.trailing
+        self.topConstraint?.constant += insets.top
+        self.leadingConstraint?.constant += insets.leading
+        self.bottomConstraint?.constant -= insets.bottom
+        self.trailingConstraint?.constant -= insets.trailing
+        
+        return self
+    }
+    
+    @discardableResult
+    func excluding(_ edgeOptions: Option...) -> TCEdgesConstraints {
+        
+        if edgeOptions.contains(.top) {
+            self.topConstraint?.isActive = false
+            self.topConstraint = nil
+        }
+        
+        if edgeOptions.contains(.leading) {
+            self.leadingConstraint?.isActive = false
+            self.leadingConstraint = nil
+        }
+        
+        if edgeOptions.contains(.bottom) {
+            self.bottomConstraint?.isActive = false
+            self.bottomConstraint = nil
+        }
+        
+        if edgeOptions.contains(.trailing) {
+            self.trailingConstraint?.isActive = false
+            self.trailingConstraint = nil
+        }
         
         return self
     }
@@ -245,42 +279,40 @@ struct TCEdgeInsets {
     var leading: CGFloat = 0
     var bottom: CGFloat = 0
     var trailing: CGFloat = 0
-    
-    static let zero = TCEdgeInsets()
-    
-    static func uniform(_ value: CGFloat) -> TCEdgeInsets {
-        TCEdgeInsets(top: value, leading: value, bottom: value, trailing: value)
+
+    init(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) {
+        self.top = top
+        self.leading = leading
+        self.bottom = bottom
+        self.trailing = trailing
     }
     
-    static func top(_ value: CGFloat) -> TCEdgeInsets {
-        TCEdgeInsets(top: value)
+    init(vertical: CGFloat, horizontal: CGFloat) {
+        self.init(top       : vertical,
+                  leading   : horizontal,
+                  bottom    : vertical,
+                  trailing  : horizontal)
     }
     
-    static func leading(_ value: CGFloat) -> TCEdgeInsets {
-        TCEdgeInsets(leading: value)
+    init(horizontal: CGFloat, top: CGFloat = 0, bottom: CGFloat = 0) {
+        self.init(top       : top,
+                  leading   : horizontal,
+                  bottom    : bottom,
+                  trailing  : horizontal)
     }
     
-    static func bottom(_ value: CGFloat) -> TCEdgeInsets {
-        TCEdgeInsets(bottom: value)
+    init(vertical: CGFloat, leading: CGFloat = 0, trailing: CGFloat = 0) {
+        self.init(top       : vertical,
+                  leading   : leading,
+                  bottom    : vertical,
+                  trailing  : trailing)
     }
     
-    static func trailing(_ value: CGFloat) -> TCEdgeInsets {
-        TCEdgeInsets(trailing: value)
-    }
-    
-    static func horizontal(_ value: CGFloat) -> TCEdgeInsets {
-        TCEdgeInsets(leading: value, trailing: value)
-    }
-    
-    static func vertical(_ value: CGFloat) -> TCEdgeInsets {
-        TCEdgeInsets(top: value, bottom: value)
-    }
-    
-    static func + (lhs: TCEdgeInsets, rhs: TCEdgeInsets) -> TCEdgeInsets {
-        TCEdgeInsets(top:       lhs.top + rhs.top,
-                     leading:   lhs.leading + rhs.leading,
-                     bottom:    lhs.bottom + rhs.bottom,
-                     trailing:  lhs.trailing + rhs.trailing)
+    init(uniform: CGFloat) {
+        self.init(top       : uniform,
+                  leading   : uniform,
+                  bottom    : uniform,
+                  trailing  : uniform)
     }
 }
 
@@ -364,6 +396,17 @@ class TCSizeConstraints {
     init(width: NSLayoutConstraint, height: NSLayoutConstraint) {
         self.widthConstraint = width
         self.heightConstraint = height
+    }
+    
+    var constant: TCSize {
+        get {
+            TCSize(width: self.widthConstraint.constant, height: self.heightConstraint.constant)
+        }
+        
+        set {
+            self.widthConstraint.constant = newValue.width
+            self.heightConstraint.constant = newValue.height
+        }
     }
 }
 
