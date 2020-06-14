@@ -237,10 +237,10 @@ class TCEdgesConstraints {
     
     @discardableResult
     func withInsets(_ insets: TCEdgeInsets) -> TCEdgesConstraints {
-        self.topConstraint?.constant += insets.top
-        self.leadingConstraint?.constant += insets.leading
-        self.bottomConstraint?.constant -= insets.bottom
-        self.trailingConstraint?.constant -= insets.trailing
+        self.topConstraint?.constant = insets.top
+        self.leadingConstraint?.constant = insets.leading
+        self.bottomConstraint?.constant = insets.bottom * (-1)
+        self.trailingConstraint?.constant = insets.trailing * (-1)
         
         return self
     }
