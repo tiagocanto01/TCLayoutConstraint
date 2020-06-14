@@ -15,8 +15,8 @@ Each line returns a NSLayoutContraint
     constraint.priority = .defaultLow
     
     view.edgesAnchor =| superview.edgesAnchor
-    (label.edgesAnchor =| superview.edgesAnchor).withInsets(.uniform(15))
-    let buttonEdgesConstraints = (button.edgesAnchor =| superview.edgesAnchor).withInsets(.top(10) + .horizontal(20))
+    (label.edgesAnchor =| superview.edgesAnchor).withInsets(TCEdgeInsets(uniform: 15)).excluding(.bottom)
+    let buttonEdgesConstraints = (button.edgesAnchor =| superview.edgesAnchor).withInsets(TCEdgeInsets(horizontal: 20, top: 10))
     buttonEdgesConstraints.bottomConstraint.priority = .defaultHigh
 ```
 
