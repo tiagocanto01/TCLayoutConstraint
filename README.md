@@ -28,7 +28,7 @@ Each line returns a NSLayoutContraint
     label.widthAnchor =| label.heightAnchor * 2
     
     view.sizeAnchor =| TCSize(width: 100, height: 50)
-    view.sizeAnchor =| labe.sizeAnchor
+    view.sizeAnchor =| label.sizeAnchor
 ```
 
 ### Center X and Center Y

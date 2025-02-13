@@ -9,9 +9,9 @@
 
 import UIKit
 
-infix operator =| : AdditionPrecedence
-infix operator >=| : AdditionPrecedence
-infix operator <=| : AdditionPrecedence
+infix operator =|: AdditionPrecedence
+infix operator >=|: AdditionPrecedence
+infix operator <=|: AdditionPrecedence
 
 enum LayoutType {
     case frameBased
@@ -37,27 +37,26 @@ extension UIView {
     }
     
     var edgesAnchor: TCLayoutEdgesAnchor {
-        get {
-            TCLayoutEdgesAnchor(top: self.topAnchor, leading: self.leadingAnchor, bottom: self.bottomAnchor, trailing: self.trailingAnchor)
-        }
+        TCLayoutEdgesAnchor(top: topAnchor,
+                            leading: leadingAnchor,
+                            bottom: bottomAnchor,
+                            trailing: trailingAnchor)
     }
     
     var centerAnchor: TCLayoutCenterAnchor {
-        get {
-            TCLayoutCenterAnchor(centerX: self.centerXAnchor, centerY: self.centerYAnchor)
-        }
+        TCLayoutCenterAnchor(centerX: centerXAnchor,
+                             centerY: centerYAnchor)
     }
     
     var sizeAnchor: TCLayoutSizeAnchor {
-        get {
-            TCLayoutSizeAnchor(width: self.widthAnchor, height: self.heightAnchor)
-        }
+        TCLayoutSizeAnchor(width: widthAnchor,
+                           height: heightAnchor)
     }
 }
 
-extension NSLayoutConstraint {
+private extension NSLayoutConstraint {
     
-    fileprivate func setViewToAutolayout() {
+    func setViewToAutolayout() {
         
         if let firstView = self.firstItem as? UIView, firstView.layoutType != .autolayout {
             firstView.layoutType = .autolayout
@@ -172,12 +171,14 @@ extension NSLayoutDimension {
     }
 }
 
+@MainActor
 @discardableResult
 func - (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
     right.constant -= constant
     return right
 }
 
+@MainActor
 @discardableResult
 func + (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
     right.constant += constant
@@ -187,6 +188,7 @@ func + (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
 // MARK: - Edges
 
 // MARK: TCLayoutEdgesAnchor
+@MainActor
 class TCLayoutEdgesAnchor {
     
     var topAnchor: NSLayoutYAxisAnchor
@@ -209,11 +211,15 @@ class TCLayoutEdgesAnchor {
         let topConstraint = left.topAnchor =| right.topAnchor
         let bottomConstraint = left.bottomAnchor =| right.bottomAnchor
         
-        return TCEdgesConstraints(top: topConstraint, leading: leadingConstraint, bottom: bottomConstraint, trailing: trailingConstraint)
+        return TCEdgesConstraints(top: topConstraint,
+                                  leading: leadingConstraint,
+                                  bottom: bottomConstraint,
+                                  trailing: trailingConstraint)
     }
 }
 
 // MARK: TCEdgesConstraints
+@MainActor
 class TCEdgesConstraints {
     
     enum Option {
@@ -239,8 +245,8 @@ class TCEdgesConstraints {
     func withInsets(_ insets: TCEdgeInsets) -> TCEdgesConstraints {
         self.topConstraint?.constant = insets.top
         self.leadingConstraint?.constant = insets.leading
-        self.bottomConstraint?.constant = insets.bottom * (-1)
-        self.trailingConstraint?.constant = insets.trailing * (-1)
+        self.bottomConstraint?.constant = -insets.bottom
+        self.trailingConstraint?.constant = -insets.trailing
         
         return self
     }
@@ -288,37 +294,38 @@ struct TCEdgeInsets {
     }
     
     init(vertical: CGFloat, horizontal: CGFloat) {
-        self.init(top       : vertical,
-                  leading   : horizontal,
-                  bottom    : vertical,
-                  trailing  : horizontal)
+        self.init(top:      vertical,
+                  leading:  horizontal,
+                  bottom:   vertical,
+                  trailing: horizontal)
     }
     
     init(horizontal: CGFloat, top: CGFloat = 0, bottom: CGFloat = 0) {
-        self.init(top       : top,
-                  leading   : horizontal,
-                  bottom    : bottom,
-                  trailing  : horizontal)
+        self.init(top:      top,
+                  leading:  horizontal,
+                  bottom:   bottom,
+                  trailing: horizontal)
     }
     
     init(vertical: CGFloat, leading: CGFloat = 0, trailing: CGFloat = 0) {
-        self.init(top       : vertical,
-                  leading   : leading,
-                  bottom    : vertical,
-                  trailing  : trailing)
+        self.init(top:      vertical,
+                  leading:  leading,
+                  bottom:   vertical,
+                  trailing: trailing)
     }
     
     init(uniform: CGFloat) {
-        self.init(top       : uniform,
-                  leading   : uniform,
-                  bottom    : uniform,
-                  trailing  : uniform)
+        self.init(top:      uniform,
+                  leading:  uniform,
+                  bottom:   uniform,
+                  trailing: uniform)
     }
 }
 
 // MARK: - Center
 
 // MARK: TCLayoutCenterAnchor
+@MainActor
 class TCLayoutCenterAnchor {
     
     var centerXAnchor: NSLayoutXAxisAnchor
@@ -338,8 +345,8 @@ class TCLayoutCenterAnchor {
     }
 }
 
-
 // MARK: TCCenterConstraints
+@MainActor
 class TCCenterConstraints {
     
     private(set) var centerXConstraint: NSLayoutConstraint
@@ -367,6 +374,7 @@ struct TCOffset {
 // MARK: - Size
 
 // MARK: TCLayoutSizeAnchor
+@MainActor
 class TCLayoutSizeAnchor {
     
     var widthAnchor: NSLayoutDimension
@@ -386,8 +394,8 @@ class TCLayoutSizeAnchor {
     }
 }
 
-
 // MARK: TCSizeConstraints
+@MainActor
 class TCSizeConstraints {
     
     private(set) var widthConstraint: NSLayoutConstraint
@@ -427,6 +435,7 @@ struct TCSize {
     }
 }
 
+@MainActor
 @discardableResult
 func =| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     
@@ -436,6 +445,7 @@ func =| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     return TCSizeConstraints(width: widthConstraint, height: heightConstraint)
 }
 
+@MainActor
 @discardableResult
 func >=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     
@@ -445,6 +455,7 @@ func >=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     return TCSizeConstraints(width: widthConstraint, height: heightConstraint)
 }
 
+@MainActor
 @discardableResult
 func <=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     
