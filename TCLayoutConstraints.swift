@@ -1,4 +1,3 @@
-
 //
 //  TCLayoutConstraints.swift
 //  Constraints
@@ -52,15 +51,32 @@ extension UIView {
         TCLayoutSizeAnchor(width: widthAnchor,
                            height: heightAnchor)
     }
+    
+    @discardableResult
+    func pinEdgesToSuperview(insets: TCEdgeInsets = .init()) -> TCEdgesConstraints? {
+        guard let superview else { return nil }
+        return (self.edgesAnchor =| superview.edgesAnchor).withInsets(insets)
+    }
+    
+    @discardableResult
+    func pinEdges(to view: UIView, insets: TCEdgeInsets = .init()) -> TCEdgesConstraints {
+        return (self.edgesAnchor =| view.edgesAnchor).withInsets(insets)
+    }
 }
 
-private extension NSLayoutConstraint {
+extension NSLayoutConstraint {
     
-    func setViewToAutolayout() {
-        
+    fileprivate func setViewToAutolayout() {
+
         if let firstView = self.firstItem as? UIView, firstView.layoutType != .autolayout {
             firstView.layoutType = .autolayout
         }
+    }
+    
+    @discardableResult
+    func withPriority(_ priority: UILayoutPriority) -> NSLayoutConstraint {
+        self.priority = priority
+        return self
     }
 }
 
@@ -189,7 +205,7 @@ func + (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
 
 // MARK: TCLayoutEdgesAnchor
 @MainActor
-class TCLayoutEdgesAnchor {
+struct TCLayoutEdgesAnchor {
     
     var topAnchor: NSLayoutYAxisAnchor
     var leadingAnchor: NSLayoutXAxisAnchor
@@ -326,7 +342,7 @@ struct TCEdgeInsets {
 
 // MARK: TCLayoutCenterAnchor
 @MainActor
-class TCLayoutCenterAnchor {
+struct TCLayoutCenterAnchor {
     
     var centerXAnchor: NSLayoutXAxisAnchor
     var centerYAnchor: NSLayoutYAxisAnchor
@@ -375,7 +391,7 @@ struct TCOffset {
 
 // MARK: TCLayoutSizeAnchor
 @MainActor
-class TCLayoutSizeAnchor {
+struct TCLayoutSizeAnchor {
     
     var widthAnchor: NSLayoutDimension
     var heightAnchor: NSLayoutDimension
@@ -394,7 +410,7 @@ class TCLayoutSizeAnchor {
     }
 }
 
-// MARK: TCSizeConstraints
+// MARK: - TCSizeConstraints
 @MainActor
 class TCSizeConstraints {
     
