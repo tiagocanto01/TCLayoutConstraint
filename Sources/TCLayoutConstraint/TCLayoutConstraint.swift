@@ -8,16 +8,16 @@
 
 import UIKit
 
-infix operator =|: AdditionPrecedence
-infix operator >=|: AdditionPrecedence
-infix operator <=|: AdditionPrecedence
+public infix operator =|: AdditionPrecedence
+public infix operator >=|: AdditionPrecedence
+public infix operator <=|: AdditionPrecedence
 
-enum LayoutType {
+public enum LayoutType {
     case frameBased
     case autolayout
 }
 
-extension UIView {
+public extension UIView {
     
     var layoutType: LayoutType {
         
@@ -64,7 +64,7 @@ extension UIView {
     }
 }
 
-extension NSLayoutConstraint {
+public extension NSLayoutConstraint {
     
     fileprivate func setViewToAutolayout() {
 
@@ -80,7 +80,7 @@ extension NSLayoutConstraint {
     }
 }
 
-extension NSLayoutXAxisAnchor {
+public extension NSLayoutXAxisAnchor {
     
     @discardableResult
     static func =| (left: NSLayoutXAxisAnchor, right: NSLayoutXAxisAnchor) -> NSLayoutConstraint {
@@ -107,7 +107,7 @@ extension NSLayoutXAxisAnchor {
     }
 }
 
-extension NSLayoutYAxisAnchor {
+public extension NSLayoutYAxisAnchor {
     
     @discardableResult
     static func =| (left: NSLayoutYAxisAnchor, right: NSLayoutYAxisAnchor) -> NSLayoutConstraint {
@@ -134,12 +134,12 @@ extension NSLayoutYAxisAnchor {
     }
 }
 
-struct LayoutMultiplierResult {
+public struct LayoutMultiplierResult {
     var dimension: NSLayoutDimension
     var multiplier: CGFloat
 }
 
-extension NSLayoutDimension {
+public extension NSLayoutDimension {
     
     @discardableResult
     static func =| (left: NSLayoutDimension, right: CGFloat) -> NSLayoutConstraint {
@@ -189,14 +189,14 @@ extension NSLayoutDimension {
 
 @MainActor
 @discardableResult
-func - (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
+public func - (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
     right.constant -= constant
     return right
 }
 
 @MainActor
 @discardableResult
-func + (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
+public func + (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
     right.constant += constant
     return right
 }
@@ -205,7 +205,7 @@ func + (right: NSLayoutConstraint, constant: CGFloat) -> NSLayoutConstraint {
 
 // MARK: TCLayoutEdgesAnchor
 @MainActor
-struct TCLayoutEdgesAnchor {
+public struct TCLayoutEdgesAnchor {
     
     var topAnchor: NSLayoutYAxisAnchor
     var leadingAnchor: NSLayoutXAxisAnchor
@@ -236,7 +236,7 @@ struct TCLayoutEdgesAnchor {
 
 // MARK: TCEdgesConstraints
 @MainActor
-class TCEdgesConstraints {
+public class TCEdgesConstraints {
     
     enum Option {
         case top
@@ -295,7 +295,7 @@ class TCEdgesConstraints {
 }
 
 // MARK: TCEdgeInsets
-struct TCEdgeInsets {
+public struct TCEdgeInsets {
     
     var top: CGFloat = 0
     var leading: CGFloat = 0
@@ -342,7 +342,7 @@ struct TCEdgeInsets {
 
 // MARK: TCLayoutCenterAnchor
 @MainActor
-struct TCLayoutCenterAnchor {
+public struct TCLayoutCenterAnchor {
     
     var centerXAnchor: NSLayoutXAxisAnchor
     var centerYAnchor: NSLayoutYAxisAnchor
@@ -363,7 +363,7 @@ struct TCLayoutCenterAnchor {
 
 // MARK: TCCenterConstraints
 @MainActor
-class TCCenterConstraints {
+public class TCCenterConstraints {
     
     private(set) var centerXConstraint: NSLayoutConstraint
     private(set) var centerYConstraint: NSLayoutConstraint
@@ -382,7 +382,7 @@ class TCCenterConstraints {
     }
 }
 
-struct TCOffset {
+public struct TCOffset {
     var x: CGFloat = 0
     var y: CGFloat = 0
 }
@@ -391,7 +391,7 @@ struct TCOffset {
 
 // MARK: TCLayoutSizeAnchor
 @MainActor
-struct TCLayoutSizeAnchor {
+public struct TCLayoutSizeAnchor {
     
     var widthAnchor: NSLayoutDimension
     var heightAnchor: NSLayoutDimension
@@ -412,7 +412,7 @@ struct TCLayoutSizeAnchor {
 
 // MARK: - TCSizeConstraints
 @MainActor
-class TCSizeConstraints {
+public class TCSizeConstraints {
     
     private(set) var widthConstraint: NSLayoutConstraint
     private(set) var heightConstraint: NSLayoutConstraint
@@ -435,7 +435,7 @@ class TCSizeConstraints {
 }
 
 // MARK: TCSize
-struct TCSize {
+public struct TCSize {
     
     var width: CGFloat = 0
     var height: CGFloat = 0
@@ -453,7 +453,7 @@ struct TCSize {
 
 @MainActor
 @discardableResult
-func =| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
+public func =| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     
     let widthConstraint = sizeAnchor.widthAnchor =| size.width
     let heightConstraint = sizeAnchor.heightAnchor =| size.height
@@ -463,7 +463,7 @@ func =| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
 
 @MainActor
 @discardableResult
-func >=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
+public func >=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     
     let widthConstraint = sizeAnchor.widthAnchor >=| size.width
     let heightConstraint = sizeAnchor.heightAnchor >=| size.height
@@ -473,7 +473,7 @@ func >=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
 
 @MainActor
 @discardableResult
-func <=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
+public func <=| (sizeAnchor: TCLayoutSizeAnchor, size: TCSize) -> TCSizeConstraints {
     
     let widthConstraint = sizeAnchor.widthAnchor <=| size.width
     let heightConstraint = sizeAnchor.heightAnchor <=| size.height
