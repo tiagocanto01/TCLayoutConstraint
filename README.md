@@ -46,7 +46,5 @@
 ```
 
 ## 📦 Installation
-Simply add the TCLayoutConstraints.swift file to your project.
-
- Swift Package Manager support coming soon.
+ Swift Package Manager
 
