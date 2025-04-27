@@ -1,9 +1,13 @@
 # TCLayoutConstraint
- Syntactic sugar that makes Auto Layout easier and readable
+ A lightweight and expressive Swift framework that simplifies the creation and management of Auto Layout constraints.
 
-## Examples
-Don't need to activate the constraints, and don't need to set translatesAutoresizingMaskIntoConstraints to false.
-Each line returns a NSLayoutContraint
+## ✨ Features
+ * Elegant custom operators (=|, >=|, <=|, +, -) for intuitive constraint writing
+ * Automatically sets translatesAutoresizingMaskIntoConstraints = false
+ * Powerful helpers for edges, size, and center constraints
+ * Clean and readable syntax
+
+## Usage
 
 ### Set Vertical or Horizontal Constraint
 ```swift
@@ -41,5 +45,8 @@ Each line returns a NSLayoutContraint
     (button.centerAnchor =| superview.centerAnchor).withOffset(TCOffset(y: 50))
 ```
 
-# Installation
- Just copy TCLayoutContraint to your project
+## 📦 Installation
+Simply add the TCLayoutConstraints.swift file to your project.
+
+ Swift Package Manager support coming soon.
+
