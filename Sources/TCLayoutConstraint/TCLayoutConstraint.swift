@@ -8,9 +8,9 @@
 
 import UIKit
 
-public infix operator =|: AdditionPrecedence
-public infix operator >=|: AdditionPrecedence
-public infix operator <=|: AdditionPrecedence
+infix operator =|: AdditionPrecedence
+infix operator >=|: AdditionPrecedence
+infix operator <=|: AdditionPrecedence
 
 public enum LayoutType {
     case frameBased
@@ -135,8 +135,8 @@ public extension NSLayoutYAxisAnchor {
 }
 
 public struct LayoutMultiplierResult {
-    var dimension: NSLayoutDimension
-    var multiplier: CGFloat
+    public var dimension: NSLayoutDimension
+    public var multiplier: CGFloat
 }
 
 public extension NSLayoutDimension {
@@ -220,7 +220,7 @@ public struct TCLayoutEdgesAnchor {
     }
     
     @discardableResult
-    static func =| (left: TCLayoutEdgesAnchor, right: TCLayoutEdgesAnchor) -> TCEdgesConstraints {
+    public static func =| (left: TCLayoutEdgesAnchor, right: TCLayoutEdgesAnchor) -> TCEdgesConstraints {
         
         let leadingConstraint = left.leadingAnchor =| right.leadingAnchor
         let trailingConstraint = left.trailingAnchor =| right.trailingAnchor
@@ -238,17 +238,17 @@ public struct TCLayoutEdgesAnchor {
 @MainActor
 public class TCEdgesConstraints {
     
-    enum Option {
+    public enum Option {
         case top
         case leading
         case bottom
         case trailing
     }
     
-    private(set) var topConstraint: NSLayoutConstraint?
-    private(set) var leadingConstraint: NSLayoutConstraint?
-    private(set) var bottomConstraint: NSLayoutConstraint?
-    private(set) var trailingConstraint: NSLayoutConstraint?
+    public private(set) var topConstraint: NSLayoutConstraint?
+    public private(set) var leadingConstraint: NSLayoutConstraint?
+    public private(set) var bottomConstraint: NSLayoutConstraint?
+    public private(set) var trailingConstraint: NSLayoutConstraint?
     
     init(top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint) {
         self.topConstraint = top
@@ -258,7 +258,7 @@ public class TCEdgesConstraints {
     }
     
     @discardableResult
-    func withInsets(_ insets: TCEdgeInsets) -> TCEdgesConstraints {
+    public func withInsets(_ insets: TCEdgeInsets) -> TCEdgesConstraints {
         self.topConstraint?.constant = insets.top
         self.leadingConstraint?.constant = insets.leading
         self.bottomConstraint?.constant = -insets.bottom
@@ -268,7 +268,7 @@ public class TCEdgesConstraints {
     }
     
     @discardableResult
-    func excluding(_ edgeOptions: Option...) -> TCEdgesConstraints {
+    public func excluding(_ edgeOptions: Option...) -> TCEdgesConstraints {
         
         if edgeOptions.contains(.top) {
             self.topConstraint?.isActive = false
@@ -297,40 +297,40 @@ public class TCEdgesConstraints {
 // MARK: TCEdgeInsets
 public struct TCEdgeInsets {
     
-    var top: CGFloat = 0
-    var leading: CGFloat = 0
-    var bottom: CGFloat = 0
-    var trailing: CGFloat = 0
+    public var top: CGFloat = 0
+    public var leading: CGFloat = 0
+    public var bottom: CGFloat = 0
+    public var trailing: CGFloat = 0
 
-    init(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) {
+    public init(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) {
         self.top = top
         self.leading = leading
         self.bottom = bottom
         self.trailing = trailing
     }
     
-    init(vertical: CGFloat, horizontal: CGFloat) {
+    public init(vertical: CGFloat, horizontal: CGFloat) {
         self.init(top:      vertical,
                   leading:  horizontal,
                   bottom:   vertical,
                   trailing: horizontal)
     }
     
-    init(horizontal: CGFloat, top: CGFloat = 0, bottom: CGFloat = 0) {
+    public init(horizontal: CGFloat, top: CGFloat = 0, bottom: CGFloat = 0) {
         self.init(top:      top,
                   leading:  horizontal,
                   bottom:   bottom,
                   trailing: horizontal)
     }
     
-    init(vertical: CGFloat, leading: CGFloat = 0, trailing: CGFloat = 0) {
+    public init(vertical: CGFloat, leading: CGFloat = 0, trailing: CGFloat = 0) {
         self.init(top:      vertical,
                   leading:  leading,
                   bottom:   vertical,
                   trailing: trailing)
     }
     
-    init(uniform: CGFloat) {
+    public init(uniform: CGFloat) {
         self.init(top:      uniform,
                   leading:  uniform,
                   bottom:   uniform,
@@ -344,8 +344,8 @@ public struct TCEdgeInsets {
 @MainActor
 public struct TCLayoutCenterAnchor {
     
-    var centerXAnchor: NSLayoutXAxisAnchor
-    var centerYAnchor: NSLayoutYAxisAnchor
+    public private(set) var centerXAnchor: NSLayoutXAxisAnchor
+    public private(set) var centerYAnchor: NSLayoutYAxisAnchor
     
     init(centerX: NSLayoutXAxisAnchor, centerY: NSLayoutYAxisAnchor) {
         self.centerXAnchor = centerX
@@ -353,7 +353,7 @@ public struct TCLayoutCenterAnchor {
     }
     
     @discardableResult
-    static func =| (left: TCLayoutCenterAnchor, right: TCLayoutCenterAnchor) -> TCCenterConstraints {
+    public static func =| (left: TCLayoutCenterAnchor, right: TCLayoutCenterAnchor) -> TCCenterConstraints {
         let centerXConstraint = left.centerXAnchor =| right.centerXAnchor
         let centerYConstraint = left.centerYAnchor =| right.centerYAnchor
         
@@ -365,8 +365,8 @@ public struct TCLayoutCenterAnchor {
 @MainActor
 public class TCCenterConstraints {
     
-    private(set) var centerXConstraint: NSLayoutConstraint
-    private(set) var centerYConstraint: NSLayoutConstraint
+    public private(set) var centerXConstraint: NSLayoutConstraint
+    public private(set) var centerYConstraint: NSLayoutConstraint
     
     init(centerX: NSLayoutConstraint, centerY: NSLayoutConstraint) {
         self.centerXConstraint = centerX
@@ -374,7 +374,7 @@ public class TCCenterConstraints {
     }
     
     @discardableResult
-    func withOffset(_ offset: TCOffset) -> TCCenterConstraints {
+    public func withOffset(_ offset: TCOffset) -> TCCenterConstraints {
         self.centerXConstraint.constant += offset.x
         self.centerYConstraint.constant += offset.y
         
@@ -383,8 +383,8 @@ public class TCCenterConstraints {
 }
 
 public struct TCOffset {
-    var x: CGFloat = 0
-    var y: CGFloat = 0
+    public var x: CGFloat = 0
+    public var y: CGFloat = 0
 }
 
 // MARK: - Size
@@ -393,8 +393,8 @@ public struct TCOffset {
 @MainActor
 public struct TCLayoutSizeAnchor {
     
-    var widthAnchor: NSLayoutDimension
-    var heightAnchor: NSLayoutDimension
+    public private(set) var widthAnchor: NSLayoutDimension
+    public private(set) var heightAnchor: NSLayoutDimension
     
     init(width: NSLayoutDimension, height: NSLayoutDimension) {
         self.widthAnchor = width
@@ -402,7 +402,7 @@ public struct TCLayoutSizeAnchor {
     }
     
     @discardableResult
-    static func =| (left: TCLayoutSizeAnchor, right: TCLayoutSizeAnchor) -> TCSizeConstraints {
+    public static func =| (left: TCLayoutSizeAnchor, right: TCLayoutSizeAnchor) -> TCSizeConstraints {
         let widthConstraint = left.widthAnchor =| right.widthAnchor
         let heightConstraint = left.heightAnchor =| right.heightAnchor
         
@@ -414,15 +414,15 @@ public struct TCLayoutSizeAnchor {
 @MainActor
 public class TCSizeConstraints {
     
-    private(set) var widthConstraint: NSLayoutConstraint
-    private(set) var heightConstraint: NSLayoutConstraint
+    public private(set) var widthConstraint: NSLayoutConstraint
+    public private(set) var heightConstraint: NSLayoutConstraint
     
     init(width: NSLayoutConstraint, height: NSLayoutConstraint) {
         self.widthConstraint = width
         self.heightConstraint = height
     }
     
-    var constant: TCSize {
+    public var constant: TCSize {
         get {
             TCSize(width: self.widthConstraint.constant, height: self.heightConstraint.constant)
         }
@@ -437,15 +437,15 @@ public class TCSizeConstraints {
 // MARK: TCSize
 public struct TCSize {
     
-    var width: CGFloat = 0
-    var height: CGFloat = 0
+    public var width: CGFloat = 0
+    public var height: CGFloat = 0
     
-    init(width: CGFloat, height: CGFloat) {
+    public init(width: CGFloat, height: CGFloat) {
         self.width = width
         self.height = height
     }
     
-    init(squareSide: CGFloat) {
+    public init(squareSide: CGFloat) {
         self.width = squareSide
         self.height = squareSide
     }
